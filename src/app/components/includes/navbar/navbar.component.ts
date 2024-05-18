@@ -9,11 +9,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent implements OnInit {
-  status: boolean = false;
-  sidebarHandler() {
-    this.status = !this.status;
-  }
-  constructor() {}
-
-  ngOnInit(): void {}
+ isList: number|undefined;
+ isMenu: boolean = false;
+ isSearch: boolean = false;
+ constructor() {}
+ ngOnInit(): void {}
 }
