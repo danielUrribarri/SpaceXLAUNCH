@@ -39,12 +39,12 @@
       </button>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1">
         @for (launchpad of paginatedLaunchpads; track $index) {
-        <div class="card w-full rounded-3xl bg-gray-300 custom-shadow p-4 overflow-auto">
+        <div class="card w-full rounded-3xl bg-gray-300 custom-shadow p-4 md:overflow-auto">
           <h3 class="font-bold text-lg mb-2">{{ launchpad.name }}</h3>
           <p class="text-sm">Region: {{ launchpad.region }}</p>
           <h4 class="mt-2 font-semibold">Launches:</h4>
           <ul>
-            @for (launch of launchpad.launches; track $index) {
+            @for (launch of launchpad['launches']; track $index) {
             <li class="text-sm">
               <span>- </span>{{ launch.name }} - {{ launch.date_utc | date: 'mediumDate' }}
             </li>
@@ -66,10 +66,10 @@
         @for (landpad of landpads; track $index) {
         <div class="card w-full rounded-3xl bg-gray-300 custom-shadow p-4">
           <h3 class="font-bold text-lg mb-2">{{ landpad.name }}</h3>
-          <p class="text-sm">Region: {{ landpad.region }}</p>
+          <p class="text-sm">Region: {{ landpad['region'] }}</p>
           <p class="text-sm">
-            @if (landpad.wikipedia) {
-            <a [href]="landpad.wikipedia" target="_blank">Wikipedia</a>
+            @if (landpad['wikipedia']) {
+            <a [href]="landpad['wikipedia']" target="_blank">Wikipedia</a>
           }
           </p>
         </div>

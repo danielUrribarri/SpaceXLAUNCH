@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map, retry } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { Launchpad } from '../interfaces/launchpad';
+import { Landpad } from '../interfaces/landpad';
+import { Launch } from '../interfaces/launch';
 
 @Injectable({
   providedIn: 'root'
@@ -12,36 +14,15 @@ export class SpacexService {
 
   constructor(private http: HttpClient) { }
 
-  getLaunchpads(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/launchpads`)
-      .pipe(
-        retry(2), // Retry failed requests up to 2 times
-        catchError(error => {
-          console.error('Error fetching launchpads:', error);
-          return throwError(error); // Re-throw the error for handling in the component
-        })
-      );
+  getLaunchpads(): Observable<Launchpad[]> {
+    return this.http.get<Launchpad[]>(`${this.apiUrl}/launchpads`);
   }
 
-  getLandpads(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/Landpads`)
-      .pipe(
-        retry(2), // Retry failed requests up to 2 times
-        catchError(error => {
-          console.error('Error fetching launchpads:', error);
-          return throwError(error); // Re-throw the error for handling in the component
-        })
-      );
+  getLandpads(): Observable<Landpad[]> {
+    return this.http.get<Landpad[]>(`${this.apiUrl}/Landpads`);
   }
 
-  getLaunches(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/launches`)
-      .pipe(
-        retry(2), // Retry failed requests up to 2 times
-        catchError(error => {
-          console.error('Error fetching launches:', error);
-          return throwError(error); // Re-throw the error for handling in the component
-        })
-      );
+  getLaunches(): Observable<Launch[]> {
+    return this.http.get<Launch[]>(`${this.apiUrl}/launches`);
   }
 }
