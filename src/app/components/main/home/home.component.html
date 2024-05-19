@@ -10,41 +10,78 @@
 </div>
 
 <section class="bg-gray-200">
-  <div *ngIf="launchpads && launchpads.length > 0" class="w-11/12 h-full rounded border-dashed border-2 border-gray-300 mx-auto flex flex-col items-center bg-white">
+  
+  <div class="w-11/12 h-full rounded border-dashed border-2 border-gray-300 mx-auto flex flex-col items-center bg-white">
+    @if (launchpads && launchpads.length > 0) {
     <h2>SpaceX Launchpads</h2>
     <div class="mb-1">
       <label for="nameFilter" class="block mb-2">Filter by Launchpad Name:</label>
       <select id="nameFilter" [(ngModel)]="nameFilter" (change)="applyFilters()" class="border p-2 rounded w-full">
         <option value="">All</option>
-        <option *ngFor="let name of launchpadNames" [value]="name">{{ name }}</option>
+        @for (name of launchpadNames; track $index) {
+        <option [value]="name">{{ name }}</option>
+        }
       </select>
 
       <label for="regionFilter" class="block mb-2 mt-4">Filter by Region:</label>
       <select id="regionFilter" [(ngModel)]="regionFilter" (change)="applyFilters()" class="border p-2 rounded w-full">
         <option value="">All</option>
-        <option *ngFor="let region of launchpadRegions" [value]="region">{{ region }}</option>
+        @for (region of launchpadRegions; track $index) {
+        <option [value]="region">{{ region }}</option>
+        }
       </select>
     </div>
-
-    <div class="overflow-auto h-96">
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        <div *ngFor="let launchpad of filteredLaunchpads" class="card w-full rounded-3xl bg-gray-300 custom-shadow p-4">
+    }
+      
+    <div class="overflow-auto h-96 flex justify-between">
+      <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0" class="border p-2 mx-2">
+        <img src="/assets/img/angle-double-left.png" alt="">
+      </button>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1">
+        @for (launchpad of paginatedLaunchpads; track $index) {
+        <div class="card w-full rounded-3xl bg-gray-300 custom-shadow p-4 overflow-auto">
           <h3 class="font-bold text-lg mb-2">{{ launchpad.name }}</h3>
           <p class="text-sm">Region: {{ launchpad.region }}</p>
-          <p class="text-sm" *ngIf="launchpad.wikipedia">
-            <a [href]="launchpad.wikipedia" target="_blank">Wikipedia</a>
-          </p>
           <h4 class="mt-2 font-semibold">Launches:</h4>
           <ul>
-            <li *ngFor="let launch of launchpad.launches" class="text-sm">
-              {{ launch.name }} - {{ launch.date_utc | date: 'mediumDate' }}
+            @for (launch of launchpad.launches; track $index) {
+            <li class="text-sm">
+              <span>- </span>{{ launch.name }} - {{ launch.date_utc | date: 'mediumDate' }}
             </li>
+            }
           </ul>
         </div>
+        }
+      </div>
+      <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage >= getTotalPages(filteredLaunchpads.length) - 1" class="border p-2 mx-2">
+        <img src="/assets/img/angle-double-right.png" alt="">
+      </button>
+    </div>
+
+  <div class="w-11/12 h-full rounded border-dashed border-2 border-gray-300 mx-auto flex flex-col items-center bg-white mt-6">
+    @if (landpads && landpads.length > 0) {
+    <h2>SpaceX Landpads</h2>
+    <div class="overflow-auto h-40">
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-2">
+        @for (landpad of landpads; track $index) {
+        <div class="card w-full rounded-3xl bg-gray-300 custom-shadow p-4">
+          <h3 class="font-bold text-lg mb-2">{{ landpad.name }}</h3>
+          <p class="text-sm">Region: {{ landpad.region }}</p>
+          <p class="text-sm">
+            @if (landpad.wikipedia) {
+            <a [href]="landpad.wikipedia" target="_blank">Wikipedia</a>
+          }
+          </p>
+        </div>
+        }
       </div>
     </div>
+    }
+  </div>
+
   </div>
 </section>
+
   
   
   

@@ -15,7 +15,7 @@ import { forkJoin } from 'rxjs';
 export class HomeComponent implements OnInit {
 
   launchpads: any[] = [];  // Array to store launchpad data
-  landpads: any[] = [];
+  landpads: any[] = [];  // Array to store landpad data
   filteredLaunchpads: any[] = [];  // Array to store filtered launchpad data
   launches: any[] = [];  // Array to store launch data
   error: any;           // Variable to store potential error
@@ -23,7 +23,12 @@ export class HomeComponent implements OnInit {
   regionFilter: string = '';  // Filter for launchpad region
   launchpadNames: string[] = [];  // Array to store unique launchpad names
   launchpadRegions: string[] = [];  // Array to store unique launchpad regions
-  landpadsWikipedia: string[] = [];
+  
+  // Pagination variables
+  currentPage: number = 0;
+  itemsPerPage: number = 5;
+  paginatedLaunchpads: any[] = [];
+  paginatedLandpads: any[] = [];
 
   constructor(private spacexService: SpacexService) { }
 
@@ -37,10 +42,14 @@ export class HomeComponent implements OnInit {
         ...lp,
         launches: launches.filter((launch: { launchpad: any; }) => launch.launchpad === lp.id)
       }));
+      
+      this.landpads = landpads;
+
       this.filteredLaunchpads = this.launchpads;
       this.launchpadNames = Array.from(new Set(this.launchpads.map(lp => lp.name)));
       this.launchpadRegions = Array.from(new Set(this.launchpads.map(lp => lp.region)));
-      this.landpadsWikipedia = Array.from(new Set(landpads.map((lp: { wikipedia: any; }) => lp.wikipedia)));
+
+      this.updatePaginatedData();
     }, error => {
       this.error = error; // Handle error in the component for UI display or logging
     });
@@ -51,5 +60,23 @@ export class HomeComponent implements OnInit {
       (this.nameFilter ? lp.name === this.nameFilter : true) &&
       (this.regionFilter ? lp.region === this.regionFilter : true)
     );
+    this.currentPage = 0;
+    this.updatePaginatedData();
+  }
+
+  updatePaginatedData() {
+    const start = this.currentPage * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.paginatedLaunchpads = this.filteredLaunchpads.slice(start, end);
+    this.paginatedLandpads = this.landpads.slice(start, end);
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.updatePaginatedData();
+  }
+
+  getTotalPages(dataLength: number): number {
+    return Math.ceil(dataLength / this.itemsPerPage);
   }
 }
