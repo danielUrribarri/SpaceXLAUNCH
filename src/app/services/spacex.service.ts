@@ -23,6 +23,17 @@ export class SpacexService {
       );
   }
 
+  getLandpads(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/Landpads`)
+      .pipe(
+        retry(2), // Retry failed requests up to 2 times
+        catchError(error => {
+          console.error('Error fetching launchpads:', error);
+          return throwError(error); // Re-throw the error for handling in the component
+        })
+      );
+  }
+
   getLaunches(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/launches`)
       .pipe(

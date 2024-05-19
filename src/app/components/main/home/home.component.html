@@ -9,29 +9,31 @@
     </div>
 </div>
 
-<section class="bg-gray-200 ">  
+<section class="bg-gray-200">
   <div *ngIf="launchpads && launchpads.length > 0" class="w-11/12 h-full rounded border-dashed border-2 border-gray-300 mx-auto flex flex-col items-center bg-white">
     <h2>SpaceX Launchpads</h2>
-      <div class="mb-1">
+    <div class="mb-1">
       <label for="nameFilter" class="block mb-2">Filter by Launchpad Name:</label>
       <select id="nameFilter" [(ngModel)]="nameFilter" (change)="applyFilters()" class="border p-2 rounded w-full">
         <option value="">All</option>
         <option *ngFor="let name of launchpadNames" [value]="name">{{ name }}</option>
       </select>
-  
+
       <label for="regionFilter" class="block mb-2 mt-4">Filter by Region:</label>
       <select id="regionFilter" [(ngModel)]="regionFilter" (change)="applyFilters()" class="border p-2 rounded w-full">
         <option value="">All</option>
         <option *ngFor="let region of launchpadRegions" [value]="region">{{ region }}</option>
       </select>
-      </div>
-  
+    </div>
+
     <div class="overflow-auto h-96">
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         <div *ngFor="let launchpad of filteredLaunchpads" class="card w-full rounded-3xl bg-gray-300 custom-shadow p-4">
           <h3 class="font-bold text-lg mb-2">{{ launchpad.name }}</h3>
           <p class="text-sm">Region: {{ launchpad.region }}</p>
-          <p class="text-sm"><a [href]="launchpad.wikipedia" target="_blank">Wikipedia</a></p>
+          <p class="text-sm" *ngIf="launchpad.wikipedia">
+            <a [href]="launchpad.wikipedia" target="_blank">Wikipedia</a>
+          </p>
           <h4 class="mt-2 font-semibold">Launches:</h4>
           <ul>
             <li *ngFor="let launch of launchpad.launches" class="text-sm">
@@ -42,7 +44,8 @@
       </div>
     </div>
   </div>
-</section>  
+</section>
+  
   
   
   

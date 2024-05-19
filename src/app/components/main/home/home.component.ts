@@ -13,7 +13,9 @@ import { forkJoin } from 'rxjs';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
+
   launchpads: any[] = [];  // Array to store launchpad data
+  landpads: any[] = [];
   filteredLaunchpads: any[] = [];  // Array to store filtered launchpad data
   launches: any[] = [];  // Array to store launch data
   error: any;           // Variable to store potential error
@@ -21,14 +23,16 @@ export class HomeComponent implements OnInit {
   regionFilter: string = '';  // Filter for launchpad region
   launchpadNames: string[] = [];  // Array to store unique launchpad names
   launchpadRegions: string[] = [];  // Array to store unique launchpad regions
+  landpadsWikipedia: string[] = [];
 
   constructor(private spacexService: SpacexService) { }
 
   ngOnInit() {
     forkJoin({
       launchpads: this.spacexService.getLaunchpads(),
-      launches: this.spacexService.getLaunches()
-    }).subscribe(({ launchpads, launches }) => {
+      launches: this.spacexService.getLaunches(),
+      landpads: this.spacexService.getLandpads()
+    }).subscribe(({ launchpads, launches, landpads }) => {
       this.launchpads = launchpads.map((lp: { id: any; }) => ({
         ...lp,
         launches: launches.filter((launch: { launchpad: any; }) => launch.launchpad === lp.id)
@@ -36,6 +40,7 @@ export class HomeComponent implements OnInit {
       this.filteredLaunchpads = this.launchpads;
       this.launchpadNames = Array.from(new Set(this.launchpads.map(lp => lp.name)));
       this.launchpadRegions = Array.from(new Set(this.launchpads.map(lp => lp.region)));
+      this.landpadsWikipedia = Array.from(new Set(landpads.map((lp: { wikipedia: any; }) => lp.wikipedia)));
     }, error => {
       this.error = error; // Handle error in the component for UI display or logging
     });
