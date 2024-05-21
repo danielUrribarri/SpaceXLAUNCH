@@ -18,7 +18,7 @@ It is developed with Angular and uses the SpaceX API to fetch real-time data.
 ## Installation
 
 - Clone the repository:
-  git clone https://github.com/your-username/spacex-dashboard.git
+  git clone git clone git@github.com:danielUrribarri/SpaceXLAUNCH.git
 
 - Install the dependencies:
   npm install
